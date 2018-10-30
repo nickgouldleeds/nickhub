@@ -9,7 +9,7 @@ def distance_between(agents_row_a, agents_row_b):
 start = time.clock()
 
 num_of_agents = 1000
-num_of_iterations = 20000
+num_of_iterations = 2000
 agents = []
 
 import matplotlib
@@ -35,8 +35,8 @@ for i in range(num_of_agents):
     #agents.append(agentframework.Agent())
     #agents.append([random.randint(0,99),random.randint(0,99)])
 
-for i in range(num_of_agents):
-    matplotlib.pyplot.scatter(agents[i].getx(),agents[i].gety(),color='red')
+#for i in range(num_of_agents):
+#    matplotlib.pyplot.scatter(agents[i].getx(),agents[i].gety(),color='red')
 
 
 
@@ -47,8 +47,8 @@ for j in range(num_of_iterations):
         agents[i].eat()
 
 
-for i in range(num_of_agents):
-    matplotlib.pyplot.scatter(agents[i].getx(),agents[i].gety(),color='black')
+#for i in range(num_of_agents):
+#    matplotlib.pyplot.scatter(agents[i].getx(),agents[i].gety(),color='black')
 
 
 matplotlib.pyplot.imshow(environment)
