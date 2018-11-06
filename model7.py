@@ -8,8 +8,8 @@ def distance_between(agents_row_a, agents_row_b):
 
 start = time.clock()
 
-num_of_agents = 1
-num_of_iterations = 2000
+num_of_agents = 3
+num_of_iterations = 10
 agents = []
 
 import matplotlib
@@ -17,21 +17,27 @@ f = open("in.txt")
 environment = []
 for line in f:
     parsed_line = str.split(line,",")
-    print (parsed_line)
+    #print (parsed_line)
     rowlist = [] 
     for word in parsed_line:
         rowlist.append(float(word))
     environment.append(rowlist)
+f.close()
+tot_env_start = 0
+for i in range(len(environment)):
+    for j in range(len(environment[i])):
+        tot_env_start += environment[i][j]
+print ("starting food",tot_env_start)
 
-#matplotlib.pyplot.imshow(environment)
-#matplotlib.pyplot.show()
+matplotlib.pyplot.imshow(environment)
+matplotlib.pyplot.show()
 
 matplotlib.pyplot.xlim(0, 99)
 matplotlib.pyplot.ylim(0, 99)
 
 # Make the agents.
 for i in range(num_of_agents):
-    agents.append(agentframework.Agent(environment))
+    agents.append(agentframework.Agent(environment,agents))
     #agents.append(agentframework.Agent())
     #agents.append([random.randint(0,99),random.randint(0,99)])
 
@@ -45,6 +51,7 @@ for j in range(num_of_iterations):
     for i in range(num_of_agents):
         agents[i].move()
         agents[i].eat()
+        agents[i].share_with_neighbours(2)
         matplotlib.pyplot.scatter(agents[i].getx(),agents[i].gety(),facecolors='none', edgecolors='black')
 
 
@@ -54,6 +61,12 @@ for j in range(num_of_iterations):
 
 matplotlib.pyplot.imshow(environment)
 matplotlib.pyplot.show()
+
+tot_env_end = 0
+for i in range(len(environment)):
+    for j in range(len(environment[i])):
+        tot_env_end += environment[i][j]
+print ("ending food",tot_env_end)
 
 end = time.clock()
 print("time = " + str(end - start))
@@ -67,4 +80,3 @@ print("time = " + str(end - start))
 #for agents_row_a in agents:
 #    for agents_row_b in agents:
 #        distance = distance_between(agents_row_a, agents_row_b) 
-
