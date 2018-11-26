@@ -1,8 +1,8 @@
 import random
 class Agent(object):
-    def __init__(self,environment,agents):
-        self._y = random.randint(0,99)
-        self._x = random.randint(0,99)
+    def __init__(self,environment,agents,y,x):
+        self._y = y # was random.randint(0,99)
+        self._x = x # was random.randint(0,99)
         self.environment = environment
         self.agents = agents
         self.store = 0

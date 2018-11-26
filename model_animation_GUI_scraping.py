@@ -1,27 +1,27 @@
-# This works but still pops up an unwanted window.
-
+# added data scraping to set agent starting locations
+# This works but still pops up an unwanted window (ony if we don't do inline graphics in Spyder.
+# 
+import sys
 import time
-import agentframework
+import agentframework_scraping as agentframework
 import matplotlib
 import tkinter
 matplotlib.use('TkAgg')
 import matplotlib.pyplot
 import matplotlib.animation 
 import matplotlib.backends.backend_tkagg
+import requests
+import bs4
 
-start = time.clock()
+start = time.process_time()
 
 num_of_agents = 50
-num_of_iterations = 5000
+num_of_iterations = 1000
 agents = []
 
 fig = matplotlib.pyplot.figure(figsize=(7, 7))
 ax = fig.add_axes([0, 0, 100, 100])
-#ax.set_autoscale_on(False)
 
-
-
-#ax = fig.add_axes([0, 0, 1, 1])
 
 f = open("in.txt")
 environment = []
@@ -33,49 +33,55 @@ for line in f:
         rowlist.append(float(word))
     environment.append(rowlist)
 f.close()
+
+
+
+#scrape a web page to get the agent starting locations...
+r = requests.get('http://www.geog.leeds.ac.uk/courses/computing/practicals/python/agent-framework/part9/data.html')
+content = r.text
+soup = bs4.BeautifulSoup(content, 'html.parser')
+td_ys = soup.find_all(attrs={"class" : "y"})
+td_xs = soup.find_all(attrs={"class" : "x"})
+
 tot_env_start = 0
 for i in range(len(environment)):
     for j in range(len(environment[i])):
         tot_env_start += environment[i][j]
 print ("starting food",tot_env_start)
-
-#matplotlib.pyplot.imshow(environment)
-#matplotlib.pyplot.show()
-#
-#matplotlib.pyplot.xlim(0, 99)
-#matplotlib.pyplot.ylim(0, 99)
-
+sys.stdout.flush()
 # Make the agents...
 for i in range(num_of_agents):
-    agents.append(agentframework.Agent(environment,agents))
+    #instead of random starting positions, use locations from scraped web page...
+    y = int(td_ys[i].text)
+    x = int(td_xs[i].text)    
+    agents.append(agentframework.Agent(environment,agents,y,x))
 
 # plot the starting positions
 #for i in range(num_of_agents):
 #    matplotlib.pyplot.scatter(agents[i].getx(),agents[i].gety(),color='red')
 
 def update(frame_number):
+    #this is called by the matplot lib animation
     # Move the agents,eat,share...
     #new display...
     fig.clear()
+    
+    #we want fixed axes (should we have to do this every time we clear the fig?!)...
+    matplotlib.pyplot.xlim(0, 99)
+    matplotlib.pyplot.ylim(0, 99)
+    
     matplotlib.pyplot.imshow(environment)
     for i in range(num_of_agents):
         agents[i].move()
         agents[i].eat()
-        agents[i].share_with_neighbours(2) # share with other agents that are within n units
-        
-        #we want fixed axes...
-        matplotlib.pyplot.xlim(0, 99)
-        matplotlib.pyplot.ylim(0, 99)
-        #plot the agent
+        agents[i].share_with_neighbours(2) # share with other agents that are within n units        
+        #plot the agent...
         matplotlib.pyplot.scatter(agents[i].getx(),agents[i].gety(),facecolors='none', edgecolors='black')
-    #if frame_number % 100 == 0:
-    #    print (frame_number)
         
-
 def run():
-    
+    # this is called by the GUI menu item 'Run'
     animation = matplotlib.animation.FuncAnimation(fig, update, frames=num_of_iterations, repeat=False)
-    canvas.show()
+    canvas.draw()
 
 #matplotlib.pyplot.imshow(environment)
 #matplotlib.pyplot.show()
@@ -104,23 +110,12 @@ root.mainloop()
 #tkinter.mainloop() 
 
 
-#tot_env_end = 0
-#for i in range(len(environment)):
-#    for j in range(len(environment[i])):
-#        tot_env_end += environment[i][j]
-#print ("ending food",tot_env_end)
-#print ("food eaten",tot_env_start - tot_env_end)
-#
-#end = time.clock()
-#print("time = " + str(end - start))
+tot_env_end = 0
+for i in range(len(environment)):
+    for j in range(len(environment[i])):
+        tot_env_end += environment[i][j]
+print ("ending food",tot_env_end)
+print ("food eaten",tot_env_start - tot_env_end)
 
-#testing getting and setting
-#my_agent = agentframework.Agent()
-#print (my_agent.getx(),my_agent.gety())
-#my_agent.setx(23)
-#my_agent.sety(43)
-#print (my_agent.getx(),my_agent.gety())
-#for agents_row_a in agents:
-#    for agents_row_b in agents:
-#        distance = distance_between(agents_row_a, agents_row_b) 
+
 
