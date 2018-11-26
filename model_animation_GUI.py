@@ -1,3 +1,5 @@
+# This works but still pops up an unwanted window.
+
 import time
 import agentframework
 import matplotlib
@@ -9,13 +11,17 @@ import matplotlib.backends.backend_tkagg
 
 start = time.clock()
 
-num_of_agents = 15
+num_of_agents = 5
 num_of_iterations = 100
 agents = []
 
 fig = matplotlib.pyplot.figure(figsize=(7, 7))
-ax = fig.add_axes([0, 0, 1, 1])
+ax = fig.add_axes([0, 0, 100, 100])
+#ax.set_autoscale_on(False)
 
+
+
+#ax = fig.add_axes([0, 0, 1, 1])
 
 f = open("in.txt")
 environment = []
@@ -49,16 +55,25 @@ for i in range(num_of_agents):
 
 def update(frame_number):
     # Move the agents,eat,share...
-
+    #new display...
+    fig.clear()
+    matplotlib.pyplot.imshow(environment)
     for i in range(num_of_agents):
         agents[i].move()
         agents[i].eat()
         agents[i].share_with_neighbours(2) # share with other agents that are within n units
+        
+        #we want fixed axes...
+        matplotlib.pyplot.xlim(0, 99)
+        matplotlib.pyplot.ylim(0, 99)
+        #plot the agent
         matplotlib.pyplot.scatter(agents[i].getx(),agents[i].gety(),facecolors='none', edgecolors='black')
+        
 
 def run():
-     animation = matplotlib.animation.FuncAnimation(fig, update, frames=num_of_iterations, repeat=False)
-     canvas.show()
+    
+    animation = matplotlib.animation.FuncAnimation(fig, update, frames=num_of_iterations, repeat=False)
+    canvas.show()
 
 #matplotlib.pyplot.imshow(environment)
 #matplotlib.pyplot.show()
