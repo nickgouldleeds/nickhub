@@ -1,5 +1,8 @@
 import random
 class Agent(object):
+    """Provides a class for an agent that can move in space and interact
+    with other agents and its environment        
+    """ 
     def __init__(self,environment,agents,y,x):
         self._y = y # was random.randint(0,99)
         self._x = x # was random.randint(0,99)
@@ -22,6 +25,9 @@ class Agent(object):
            self.store += 40 
         
     def move(self):
+        """
+        Move an agent randomly in 2D
+        """
         if random.random() < 0.5:
             self._y = (self._y + 1) % 100
         else:

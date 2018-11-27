@@ -1,3 +1,8 @@
+"""
+Implements the agent framework buy creating agents with starting
+locations determined from a scraped web page. Agents move randomly, eating the
+environment and sharing with neighbours
+"""
 # added data scraping to set agent starting locations
 # This works but still pops up an unwanted window (ony if we don't do inline graphics in Spyder.
 # 
@@ -15,8 +20,8 @@ import bs4
 
 start = time.process_time()
 
-num_of_agents = 50
-num_of_iterations = 1000
+num_of_agents = 5
+num_of_iterations = 100
 agents = []
 
 fig = matplotlib.pyplot.figure(figsize=(7, 7))
@@ -85,7 +90,10 @@ def run():
 
 #matplotlib.pyplot.imshow(environment)
 #matplotlib.pyplot.show()
-
+"""
+Set-up the GUI using tkinter. Creates a window and a menu with a single menu
+item.
+"""
 root = tkinter.Tk() 
 root.wm_title("ABM Model")
 canvas = matplotlib.backends.backend_tkagg.FigureCanvasTkAgg(fig, master=root)
