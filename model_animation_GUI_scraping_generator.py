@@ -88,8 +88,7 @@ def update(frame_number):
         print("random stopping condition")
         sys.stdout.flush()
 
-def gen_function(b = [0]):
-    
+def gen_function(b = [0]):    
     a = 0
     global carry_on #Not actually needed as we're not assigning, but clearer
     while (a < 50) & (carry_on) :
